@@ -77,7 +77,11 @@ export const updateProduct = async (req, res) => {
       return res.status(400).json({ msg: "Cantidad no puede ser negativa" });
     }
 
-    const p = await Product.findByIdAndUpdate(req.params.id, updates, { new: true });
+    const p = await Product.findByIdAndUpdate(
+      req.params.id,
+      updates,
+      { new: true, runValidators: true }
+    );
     if (!p) return res.status(404).json({ msg: "No encontrado" });
 
     await maybeNotifyLowStock(p);
