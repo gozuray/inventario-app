@@ -19,17 +19,17 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // Login al backend
+  // Llamada al backend para login
   login(email: string, password: string) {
     return this.http.post<LoginResponse>(`${config.baseUrl}/auth/login`, { email, password });
   }
 
-  // Guardar token
+  // Guardar token en localStorage
   setToken(token: string) {
     localStorage.setItem(this.tokenKey, token);
   }
 
-  // Obtener token
+  // Obtener token actual
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
@@ -39,7 +39,7 @@ export class AuthService {
     localStorage.removeItem(this.tokenKey);
   }
 
-  // Verificar si hay sesión válida
+  // Verifica si el usuario está autenticado y el token no está vencido
   isLoggedIn(): boolean {
     const token = this.getToken();
     if (!token) return false;
@@ -47,17 +47,18 @@ export class AuthService {
     return decoded?.exp ? Date.now() < decoded.exp * 1000 : true;
   }
 
-  // Obtener rol
-  getRole(): 'ADMIN' | 'EMPLEADO' | null {
-    return this.decodeToken(this.getToken() || '')?.role ?? null;
+  // Devuelve el rol del usuario (ADMIN o EMPLEADO)
+  getRole(): string {
+    return this.decodeToken(this.getToken() || '')?.role ?? '';
   }
 
-  // Obtener nombre de usuario
+  // Devuelve el nombre o correo del usuario
   getUserName(): string {
-    return this.decodeToken(this.getToken() || '')?.name ?? '';
+    const decoded = this.decodeToken(this.getToken() || '');
+    return decoded?.name || decoded?.email || '';
   }
 
-  // Decodificar JWT
+  // Decodifica el JWT manualmente
   private decodeToken(token: string): DecodedToken | null {
     try {
       const payload = token.split('.')[1];

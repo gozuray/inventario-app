@@ -1,0 +1,28 @@
+<div class="container" style="max-width:900px;margin:2rem auto;">
+  <h2>Inventario bajo</h2>
+
+  <button (click)="downloadPdf()" [disabled]="loading()">
+    {{ loading() ? 'Generando…' : 'Descargar PDF' }}
+  </button>
+
+  <p *ngIf="error()" style="color:#b00020;margin-top:0.5rem;">{{ error() }}</p>
+
+  <table *ngIf="products().length" border="1" cellpadding="8" cellspacing="0" style="width:100%;margin-top:1rem;">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>Categoría</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products()">
+        <td>{{ p.name }}</td>
+        <td style="color:#b00020">{{ p.quantity }}</td>
+        <td>{{ p.category }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!products().length && !loading()">No hay productos con stock &lt; 5.</p>
+</div>

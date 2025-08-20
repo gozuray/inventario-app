@@ -1,0 +1,20 @@
+<nav class="nav" style="display:flex;justify-content:space-between;align-items:center;padding:1rem;border-bottom:1px solid #ccc;">
+  <div>
+    <b>Inventario App</b>
+    <!-- Enlaces visibles solo si estás logueado -->
+    <ng-container *ngIf="auth.isLoggedIn()">
+      <a class="btn" routerLink="/products">Productos</a>
+      <a class="btn" routerLink="/low-stock">Stock Bajo</a>
+      <a class="btn" *ngIf="auth.getRole() === 'admin'" routerLink="/products/new">Nuevo</a>
+    </ng-container>
+  </div>
+
+  <div *ngIf="auth.isLoggedIn(); else out">
+    <span class="badge">{{ auth.getUserName() || auth.getRole() }}</span>
+    <a class="btn" (click)="logout()">Salir</a>
+  </div>
+
+  <ng-template #out>
+    <a class="btn" routerLink="/login">Login</a>
+  </ng-template>
+</nav>

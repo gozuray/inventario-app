@@ -1,0 +1,32 @@
+<div class="container" style="max-width:720px;margin:2rem auto;">
+  <h2>{{ title }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div>
+      <label>Nombre *</label>
+      <input formControlName="name" required>
+    </div>
+    <div>
+      <label>Descripción</label>
+      <textarea formControlName="description" rows="3"></textarea>
+    </div>
+    <div>
+      <label>Precio *</label>
+      <input type="number" formControlName="price" step="0.01" required>
+    </div>
+    <div>
+      <label>Cantidad *</label>
+      <input type="number" formControlName="quantity" required>
+      <small *ngIf="form.value.quantity! < 0" style="color:#b00020">No se permiten cantidades negativas</small>
+    </div>
+    <div>
+      <label>Categoría</label>
+      <input formControlName="category">
+    </div>
+
+    <div style="margin-top:1rem;">
+      <button type="submit" [disabled]="loading()">{{ loading() ? 'Guardando…' : 'Guardar' }}</button>
+      <span *ngIf="error()" style="color:#b00020;margin-left:1rem;">{{ error() }}</span>
+    </div>
+  </form>
+</div>

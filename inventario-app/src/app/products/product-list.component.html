@@ -1,0 +1,48 @@
+<div class="container" style="max-width:1000px;margin:2rem auto;">
+  <h2>Productos</h2>
+
+  <div class="filters" style="display:grid;grid-template-columns:1fr 1fr auto;gap:0.75rem;align-items:end;">
+    <div>
+      <label>Nombre</label>
+      <input type="text" [formControl]="filters.controls.name" placeholder="Buscar por nombre">
+    </div>
+    <div>
+      <label>Categoria</label>
+      <input type="text" [formControl]="filters.controls.category" placeholder="Filtrar por categoría">
+    </div>
+    <button (click)="create()">Nuevo</button>
+  </div>
+
+  <p *ngIf="loading()">Cargando…</p>
+  <p *ngIf="error()" style="color:#b00020">{{ error() }}</p>
+
+  <table *ngIf="!loading() && products().length" border="1" cellpadding="8" cellspacing="0" style="width:100%;margin-top:1rem;">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Categoría</th>
+        <th style="width:160px;">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products()">
+        <td>{{ p.name }}</td>
+        <td>{{ p.description }}</td>
+        <td>{{ p.price | currency:'USD' }}</td>
+        <td [style.color]="p.quantity < 5 ? '#b00020' : 'inherit'">
+          {{ p.quantity }}
+        </td>
+        <td>{{ p.category }}</td>
+        <td>
+          <button (click)="edit(p)">Editar</button>
+          <button (click)="remove(p)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading() && !products().length">Sin resultados.</p>
+</div>
