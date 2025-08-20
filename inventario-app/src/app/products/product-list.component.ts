@@ -2,14 +2,13 @@ import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
 import { Product, ProductService } from './product.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './product-list.component.html'
 })
 export class ProductListComponent {
@@ -32,8 +31,6 @@ export class ProductListComponent {
       .subscribe(() => this.fetch());
 
     effect(() => { this.fetch(); });
-
-    // Limpieza si quieres: onDestroy -> sub.unsubscribe()
   }
 
   fetch() {

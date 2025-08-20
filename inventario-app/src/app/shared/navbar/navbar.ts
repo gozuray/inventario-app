@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../core/core/auth.service'; // ✅ corregido
+import { AuthService } from '../../core/auth.service'; // fixed path
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +10,7 @@ import { AuthService } from '../../core/core/auth.service'; // ✅ corregido
   templateUrl: './navbar.html'
 })
 export class Navbar {
-  constructor(public auth: AuthService) {}
+  auth = inject(AuthService);
 
   logout() {
     this.auth.clear();

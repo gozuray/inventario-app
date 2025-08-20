@@ -1,8 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment'; // o usa tu core/config.ts
-import { baseUrl } from '../core/config'; // si ya lo tienes, usa este import
+import { environment } from '../../environments/environment';
 
 export interface Product {
   _id?: string;
@@ -23,12 +22,14 @@ export interface ProductQuery {
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private http = inject(HttpClient);
-  private api = `${baseUrl}/products`; // ajusta si tu endpoint es distinto
+  private api = `${environment.baseUrl}/products`; // Changed from apiUrl to baseUrl
 
   list(query: ProductQuery = {}): Observable<Product[]> {
     let params = new HttpParams();
     Object.entries(query).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== '') params = params.set(k, String(v));
+      if (v !== undefined && v !== null && v !== '') {
+        params = params.set(k, String(v));
+      }
     });
     return this.http.get<Product[]>(this.api, { params });
   }
@@ -49,10 +50,10 @@ export class ProductService {
     return this.http.delete<void>(`${this.api}/${id}`);
   }
 
+  // ✅ corregido para usar environment.apiUrl y responseType
   downloadLowStockPdf(): Observable<Blob> {
-    return this.http.get(`${baseUrl}/reports/low-stock`, {
-      responseType: 'blob',
-      observe: 'response'
-    }).pipe(response => response as unknown as Observable<Blob>);
+    return this.http.get(`${environment.baseUrl}/reports/low-stock`, { // Changed from apiUrl to baseUrl
+      responseType: 'blob'
+    });
   }
 }
