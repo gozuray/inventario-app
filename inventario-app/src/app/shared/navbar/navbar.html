@@ -1,0 +1,10 @@
+<nav class="nav">
+  <div><b>Inventario App</b></div>
+  <div *ngIf="auth.isLoggedIn(); else out">
+    <span class="badge">{{auth.getUserName() || auth.getRole()}}</span>
+    <a class="btn" routerLink="/login" (click)="logout()">Salir</a>
+  </div>
+  <ng-template #out>
+    <a routerLink="/login">Login</a>
+  </ng-template>
+</nav>
