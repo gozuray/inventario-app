@@ -1,12 +1,24 @@
-import { CanActivateFn } from '@angular/router';
-import { inject } from '@angular/core';
+// src/app/core/auth-guard.ts
+import { CanActivateFn, Router } from '@angular/router';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
 
 export const authGuard: CanActivateFn = (_route, _state) => {
+  const platformId = inject(PLATFORM_ID);
   const auth = inject(AuthService);
   const router = inject(Router);
-  if (auth.isLoggedIn()) return true;
-  router.navigate(['/login']);
-  return false;
+
+  // ✅ En SSR (no hay localStorage), dejamos pasar para renderizar
+  if (!isPlatformBrowser(platformId)) {
+    return true;
+  }
+
+  // ✅ En navegador: valida token
+  if (auth.isLoggedIn()) {
+    return true;
+  }
+
+  // Si no está logueado → redirige a login
+  return router.createUrlTree(['/login']);
 };

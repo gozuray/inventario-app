@@ -1,6 +1,7 @@
-// Stub minimal para evitar error de compilación cuando falta el archivo main.server.ts
-// Este archivo exporta un valor por defecto para que la referencia
-// "export { default } from './src/main.server'" tenga algo que importar.
+import { bootstrapApplication } from '@angular/platform-browser';
+import { App } from './app/app';
+import { config } from './app/app.config.server';
 
-const serverApp: unknown = {};
-export default serverApp;
+export default async function bootstrap() {
+  return bootstrapApplication(App, config as any);
+}

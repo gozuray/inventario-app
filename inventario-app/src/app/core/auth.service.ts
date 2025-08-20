@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+// src/app/core/auth.service.ts
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
 import { config } from './config';
 
 interface LoginResponse {
@@ -16,6 +18,7 @@ interface DecodedToken {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly tokenKey = 'token';
+  private platformId = inject(PLATFORM_ID);
 
   constructor(private http: HttpClient) {}
 
@@ -24,19 +27,25 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${config.baseUrl}/auth/login`, { email, password });
   }
 
-  // Guardar token en localStorage
+  // Guardar token en localStorage (solo si estamos en navegador)
   setToken(token: string) {
-    localStorage.setItem(this.tokenKey, token);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(this.tokenKey, token);
+    }
   }
 
   // Obtener token actual
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return isPlatformBrowser(this.platformId)
+      ? localStorage.getItem(this.tokenKey)
+      : null;
   }
 
   // Eliminar token (logout)
   clear() {
-    localStorage.removeItem(this.tokenKey);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.tokenKey);
+    }
   }
 
   // Verifica si el usuario está autenticado y el token no está vencido
