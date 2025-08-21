@@ -32,25 +32,18 @@ export const getProducts = async (req, res) => {
 
     // Construcción dinámica del filtro
     const q = {};
-    if (name) q.name = { $regex: name, $options: "i" };         // búsqueda parcial por nombre
-    if (category) q.category = { $regex: category, $options: "i" }; // búsqueda parcial por categoría
+    if (name) q.name = { $regex: name, $options: "i" };
+    if (category) q.category = { $regex: category, $options: "i" };
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    // Consulta y total en paralelo
-    const [items, total] = await Promise.all([
-      Product.find(q).skip(skip).limit(Number(limit)).sort({ createdAt: -1 }),
-      Product.countDocuments(q)
-    ]);
+    // Just return the array of items
+    const items = await Product.find(q).skip(skip).limit(Number(limit)).sort({ createdAt: -1 });
+    
+    res.json(items); // ← Return only the array
 
-    res.json({
-      items,
-      total,
-      page: Number(page),
-      pages: Math.ceil(total / Number(limit))
-    });
   } catch (e) {
-    res.status(500).json({ error: e.message }); // error de servidor/consulta
+    res.status(500).json({ error: e.message });
   }
 };
 

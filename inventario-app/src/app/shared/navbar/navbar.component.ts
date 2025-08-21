@@ -14,8 +14,8 @@ import { AuthService } from '../../core/auth.service';
 
       <!-- Links -->
       <div class="links">
-        <a routerLink="/productos">Productos</a>
-        <a routerLink="/reportes" *ngIf="isAdmin()">Reportes</a>
+        <a routerLink="/products">Productos</a>
+        <a routerLink="/low-stock" *ngIf="isAdmin()">Reportes</a>
       </div>
 
       <!-- Usuario -->
@@ -79,14 +79,14 @@ import { AuthService } from '../../core/auth.service';
 })
 export class NavbarComponent {
   private auth = inject(AuthService);
-  user = signal(this.auth.getUser());
-
-  isAdmin() {
-    return this.user()?.role === 'ADMIN';
+  
+  user = this.auth.userSignal;
+  
+  isAdmin(): boolean {
+    return this.auth.userSignal()?.role === 'ADMIN';
   }
-
+  
   logout() {
-    this.auth.clear();
-    location.href = '/login';
+    this.auth.logout();
   }
 }

@@ -4,6 +4,7 @@ import cors from "cors";
 // Rutas
 import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import reportRoutes from "./routes/report.routes.js";
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.get("/api/health", (_req, res) => res.json({ ok: true }));
 // Montar las rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/reports", reportRoutes);
 
 export default app;
