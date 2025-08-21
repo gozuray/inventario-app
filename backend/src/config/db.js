@@ -1,8 +1,15 @@
 import mongoose from "mongoose";
 
 export const connectDB = async () => {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) throw new Error("MONGODB_URI no definida");
-  await mongoose.connect(uri);
-  console.log("✅ MongoDB conectado");
+  try {
+    const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/inventario_app";
+    console.log("🔄 Intentando conectar a:", uri);
+    
+    await mongoose.connect(uri);
+    console.log("✅ MongoDB conectado exitosamente");
+    console.log("📊 Base de datos:", mongoose.connection.name);
+  } catch (error) {
+    console.error("❌ Error conectando a MongoDB:", error.message);
+    throw error;
+  }
 };
