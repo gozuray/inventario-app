@@ -22,3 +22,8 @@ export const authGuard: CanActivateFn = (_route, _state) => {
   // Si no está logueado → redirige a login
   return router.createUrlTree(['/login']);
 };
+
+export const environment = {
+  production: false,
+  baseUrl: 'http://localhost:3000/api'  // Changed from 4000 to 3000
+};

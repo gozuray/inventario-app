@@ -1,4 +1,5 @@
+// src/environments/environment.prod.ts
 export const environment = {
   production: true,
-  baseUrl: 'https://inventario-backend.example.com/api'
+  baseUrl: 'http://localhost:4000/api'
 };

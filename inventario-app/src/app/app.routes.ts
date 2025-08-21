@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth-guard';
 import { roleGuard } from './core/role-guard';
+import { loginBlockGuard } from './core/login-block-guard';
 
 export const routes: Routes = [
-  { path: 'login', loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
+  { path: 'login', canActivate: [loginBlockGuard], loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
 
   { path: 'products', canActivate: [authGuard], loadComponent: () => import('./products/product-list.component').then(m => m.ProductListComponent) },
   { path: 'products/new', canActivate: [authGuard, roleGuard], data: { roles: ['admin'] }, loadComponent: () => import('./products/product-form.component').then(m => m.ProductFormComponent) },
