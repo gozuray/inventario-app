@@ -8,13 +8,14 @@ interface LoginResponse {
   token: string;
 }
 
-type UserRole = 'ADMIN' | 'EMPLEADO';
+export type UserRole = 'ADMIN' | 'EMPLEADO';
 
 interface DecodedToken {
+  sub?: string;       // id de usuario (opcional según tu backend)
   role?: UserRole;
   name?: string;
   email?: string;
-  exp?: number; // Unix seconds
+  exp?: number;       // Unix seconds
 }
 
 @Injectable({ providedIn: 'root' })
@@ -63,7 +64,7 @@ export class AuthService {
     return this.isLoggedIn();
   }
 
-  // === User info ===
+  // === User info (para navbar, guards, etc.) ===
   getRole(): UserRole | '' {
     return this.decodeToken(this.getToken() || '')?.role ?? '';
   }
@@ -71,6 +72,20 @@ export class AuthService {
   getUserName(): string {
     const decoded = this.decodeToken(this.getToken() || '');
     return decoded?.name || decoded?.email || '';
+  }
+
+  /** Devuelve un objeto de usuario decodificado desde el JWT (o null si no hay token) */
+  getUser(): { id?: string; email?: string; name?: string; role?: UserRole } | null {
+    const t = this.getToken();
+    if (!t) return null;
+    const d = this.decodeToken(t);
+    if (!d) return null;
+    return {
+      id: d.sub,
+      email: d.email,
+      name: d.name,
+      role: d.role,
+    };
   }
 
   // === Internal ===
@@ -84,7 +99,7 @@ export class AuthService {
       const padded = base64.padEnd(base64.length + (4 - (base64.length % 4 || 4)) % 4, '=');
 
       const json = this.b64Decode(padded);
-      return json ? JSON.parse(json) : null;
+      return json ? JSON.parse(json) as DecodedToken : null;
     } catch {
       return null;
     }
